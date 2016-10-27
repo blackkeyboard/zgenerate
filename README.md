@@ -9,12 +9,14 @@ Currently returns the first address associated with m/0'/0/0 (hardened key for a
 * Git
 
 ##Build
+~~~~
 go get -u github.com/btcsuite/btcutil
 go get -u github.com/blackkeyboard/mneumonic
+go install github.com/blackkeyboard/zgenerate
+~~~~
 
 ##Usage
 To generate a wallet:
-	
 ~~~~
 zgenerate [-t] [-n 1]
 
