@@ -10,6 +10,7 @@ import (
 func main() {
 	var networkId zcashcrypto.NetworkId
 	boolPtr := flag.Bool("test", false, "generate a testnet wallet")
+	nPtr := flag.Int("n", 1, "Number of addresses to generate")
 	flag.Parse()
 
 	// 2 bytes as per https://github.com/zcash/zcash/blob/master/src/chainparams.cpp
@@ -20,8 +21,7 @@ func main() {
 	}
 
 	// Generate the wallet
-	// More than 1 address can be generated but we'll pull off the first one
-	wallet, err := zcashcrypto.CreateWallet(networkId, 1)
+	wallet, err := zcashcrypto.CreateWallet(networkId, *nPtr)
 
 	if err != nil {
 		log.Panicln(err.Error())
@@ -29,6 +29,9 @@ func main() {
 
 	log.Println("Wallet generated!")
 	log.Printf("Passphrase: %s\n", wallet.Passphrase)
-	log.Printf("Address: %s\n", wallet.Addresses[0].Value)
-	log.Printf("Privatekey: %s\n", wallet.Addresses[0].PrivateKey)
+	log.Printf("Address\t\t\t\tPrivate key")
+
+	for i := 0; i <= len(wallet.Addresses)-1; i++ {
+		log.Printf("%s\t%s\n", wallet.Addresses[i].Value, wallet.Addresses[i].PrivateKey)
+	}
 }
