@@ -27,12 +27,17 @@ type ZcashAddress struct {
 	PrivateKey string `json:"privateKey"`
 }
 
-type NetworkId [2]byte
-type Prefix [1]byte
+func getExtendedKeyFromPassphrase(mainnet bool, passphrase string) (*hdkeychain.ExtendedKey, error) {
+	var networkCfg chaincfg.Params
 
-var SecretKeyPrefix = Prefix{0xEF}
+	// Switch depending on mainnet or testnet
+	if mainnet == true {
+		networkCfg = chaincfg.MainNetParams
 
-func getExtendedKeyFromPassphrase(passphrase string) (*hdkeychain.ExtendedKey, error) {
+	} else {
+		networkCfg = chaincfg.TestNet3Params
+	}
+
 	m := mneumonic.FromWords(strings.Split(passphrase, " "))
 	hexSeed := m.ToHex()
 
@@ -42,7 +47,7 @@ func getExtendedKeyFromPassphrase(passphrase string) (*hdkeychain.ExtendedKey, e
 		return nil, err
 	}
 
-	masterKey, err := hdkeychain.NewMaster(hexValue, &chaincfg.MainNetParams)
+	masterKey, err := hdkeychain.NewMaster(hexValue, &networkCfg)
 	if err != nil {
 		return nil, err
 	}
@@ -63,10 +68,22 @@ func getExtendedKeyFromPassphrase(passphrase string) (*hdkeychain.ExtendedKey, e
 	return extAcct0, nil
 }
 
-func getAddressFromPassphrase(passphrase string, networkId NetworkId, position uint32) (ZcashAddress, error) {
+func getAddressFromPassphrase(mainnet bool, passphrase string, position uint32) (ZcashAddress, error) {
 	var returnValue ZcashAddress
+	var networkId NetworkId
+	var networkCfg chaincfg.Params
 
-	extendedKey, err := getExtendedKeyFromPassphrase(passphrase)
+	// Switch depending on mainnet or testnet
+	if mainnet == true {
+		networkId = MainnnetId
+		networkCfg = chaincfg.MainNetParams
+
+	} else {
+		networkId = TestnetId
+		networkCfg = chaincfg.TestNet3Params
+	}
+
+	extendedKey, err := getExtendedKeyFromPassphrase(mainnet, passphrase)
 	if err != nil {
 		return returnValue, err
 	}
@@ -93,7 +110,7 @@ func getAddressFromPassphrase(passphrase string, networkId NetworkId, position u
 	}
 
 	returnValue.Value = fmt.Sprintf("%s", encodedAddress)
-	wif, err := btcutil.NewWIF(privKey, &chaincfg.MainNetParams, true)
+	wif, err := btcutil.NewWIF(privKey, &networkCfg, true)
 
 	if err != nil {
 		return returnValue, err
@@ -105,9 +122,21 @@ func getAddressFromPassphrase(passphrase string, networkId NetworkId, position u
 	return returnValue, nil
 }
 
-func CreateWallet(networkId NetworkId, numberOfAddressesToGenerate int) (ZcashWallet, error) {
+func CreateWallet(mainnet bool, numberOfAddressesToGenerate int) (ZcashWallet, error) {
 	var wallet ZcashWallet
 	var numAddresses int
+	var networkId NetworkId
+	var networkCfg chaincfg.Params
+
+	// Switch depending on mainnet or testnet
+	if mainnet == true {
+		networkId = MainnnetId
+		networkCfg = chaincfg.MainNetParams
+
+	} else {
+		networkId = TestnetId
+		networkCfg = chaincfg.TestNet3Params
+	}
 
 	if numberOfAddressesToGenerate <= 0 {
 		numAddresses = 20
@@ -121,7 +150,7 @@ func CreateWallet(networkId NetworkId, numberOfAddressesToGenerate int) (ZcashWa
 	wallet.Passphrase = strings.Join(m.ToWords(), " ")
 	wallet.HexSeed = m.ToHex()
 
-	extendedKey, err := getExtendedKeyFromPassphrase(wallet.Passphrase)
+	extendedKey, err := getExtendedKeyFromPassphrase(mainnet, wallet.Passphrase)
 	if err != nil {
 		return wallet, err
 	}
@@ -152,7 +181,7 @@ func CreateWallet(networkId NetworkId, numberOfAddressesToGenerate int) (ZcashWa
 		}
 
 		address.Value = fmt.Sprintf("%s", encodedAddress)
-		wif, err := btcutil.NewWIF(privKey, &chaincfg.MainNetParams, true)
+		wif, err := btcutil.NewWIF(privKey, &networkCfg, true)
 
 		if err != nil {
 			return wallet, err
@@ -167,11 +196,11 @@ func CreateWallet(networkId NetworkId, numberOfAddressesToGenerate int) (ZcashWa
 	return wallet, nil
 }
 
-func GetWalletFromPassphrase(passphrase string, networkId NetworkId, position uint32) (ZcashWallet, error) {
+func GetWalletFromPassphrase(mainnet bool, passphrase string, position uint32) (ZcashWallet, error) {
 	var result ZcashWallet
 	var address ZcashAddress
 
-	address, err := getAddressFromPassphrase(passphrase, networkId, position)
+	address, err := getAddressFromPassphrase(mainnet, passphrase, position)
 
 	if err != nil {
 		return result, err

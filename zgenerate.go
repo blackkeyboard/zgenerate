@@ -8,20 +8,13 @@ import (
 )
 
 func main() {
-	var networkId zcashcrypto.NetworkId
+	//	var networkId zcashcrypto.NetworkId
 	boolPtr := flag.Bool("test", false, "generate a testnet wallet")
 	nPtr := flag.Int("n", 1, "Number of addresses to generate")
 	flag.Parse()
 
-	// 2 bytes as per https://github.com/zcash/zcash/blob/master/src/chainparams.cpp
-	if *boolPtr == true {
-		networkId = zcashcrypto.NetworkId{0x1D, 0x25} //testnet
-	} else {
-		networkId = zcashcrypto.NetworkId{0x1C, 0xB8}
-	}
-
 	// Generate the wallet
-	wallet, err := zcashcrypto.CreateWallet(networkId, *nPtr)
+	wallet, err := zcashcrypto.CreateWallet(!(*boolPtr), *nPtr)
 
 	if err != nil {
 		log.Panicln(err.Error())
