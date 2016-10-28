@@ -93,7 +93,7 @@ func getAddressFromPassphrase(passphrase string, networkId NetworkId, position u
 	}
 
 	returnValue.Value = fmt.Sprintf("%s", encodedAddress)
-	wif, err := btcutil.NewWIF(privKey, &chaincfg.TestNet3Params, true)
+	wif, err := btcutil.NewWIF(privKey, &chaincfg.MainNetParams, true)
 
 	if err != nil {
 		return returnValue, err
@@ -152,7 +152,7 @@ func CreateWallet(networkId NetworkId, numberOfAddressesToGenerate int) (ZcashWa
 		}
 
 		address.Value = fmt.Sprintf("%s", encodedAddress)
-		wif, err := btcutil.NewWIF(privKey, &chaincfg.TestNet3Params, true)
+		wif, err := btcutil.NewWIF(privKey, &chaincfg.MainNetParams, true)
 
 		if err != nil {
 			return wallet, err
