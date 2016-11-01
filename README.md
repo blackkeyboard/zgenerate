@@ -28,12 +28,19 @@ Options
 To retrieve the first address from the HD wallet:
 	
 ~~~~
-zretrieve [-t] -passphrase=<passphrase>
+zretrieve -passphrase=<passphrase> [-t] [-n 1] [-match="regex string"] [-i]
 
 Options
 -t generate testnet addresses	
 -n number of addresses to retrieve. Defaults to 1
+-match regex string to search for in the address
+-i case insensitive string matching
+
+eg. Search case insensitive for a vanity address which starts with the string "t1jl"
+zretrieve -passphrase="board start difference answer blossom roll powerful million rough butterfly bedroom beam" -match "^t1jl" -i
 ~~~~
+
+Note: The maximum number of addresses that can be searched given a wallet passphrase is 4,294,967,295 (unsigned 32 bit integer). Depending on your version of Go, case insensitive matching may be slow. https://github.com/golang/go/issues/13288.
 
 To import the private key into ZCash:
 ~~~~
