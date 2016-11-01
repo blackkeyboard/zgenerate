@@ -25,7 +25,7 @@ Options
 -n number of addresses to generate. Defaults to 1
 ~~~~
 
-To retrieve the first address from the HD wallet:
+To retrieve addresses generated from your HD wallet:
 	
 ~~~~
 zretrieve -passphrase=<passphrase> [-t] [-n 1] [-match="regex string"] [-i]
