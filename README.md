@@ -13,6 +13,14 @@ Currently returns the first address associated with m/0'/0/0 (hardened key for a
 go get -u github.com/btcsuite/btcutil
 go get -u github.com/blackkeyboard/mneumonic
 go install github.com/blackkeyboard/zgenerate
+go install github.com/blackkeyboard/zgenerate/zretrieve
+~~~~
+
+##Update an Existing Install
+~~~~
+go clean github.com/blackkeyboard/zgenerate
+go install github.com/blackkeyboard/zgenerate
+go install github.com/blackkeyboard/zgenerate/zretrieve
 ~~~~
 
 ##Usage
