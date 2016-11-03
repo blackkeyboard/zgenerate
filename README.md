@@ -1,6 +1,6 @@
 # zgenerate
 
-Offline BIP32 HD wallet generator for ZCash.
+Offline BIP32 HD wallet and vanity address generator for ZCash.
 
 Currently returns the first address associated with m/0'/0/0 (hardened key for account 0/external account)
 
@@ -35,12 +35,14 @@ Options
 -n number of addresses to retrieve. Defaults to 1
 -match regex string to search for in the address
 -i case insensitive string matching
+~~~~
 
 eg. Search case insensitive for a vanity address which starts with the string "t1jl"
+~~~~
 zretrieve -passphrase="board start difference answer blossom roll powerful million rough butterfly bedroom beam" -match "^t1jl" -i
 ~~~~
 
-Note: The maximum number of addresses that can be searched given a wallet passphrase is 4,294,967,295 (unsigned 32 bit integer). Depending on your version of Go, case insensitive matching may be slow. https://github.com/golang/go/issues/13288.
+Note: The maximum number of addresses that can be searched given a wallet passphrase is restricted to 4,294,967,295 (unsigned 32 bit integer). Depending on your version of Go, case insensitive matching may be slow. https://github.com/golang/go/issues/13288.
 
 To import the private key into ZCash:
 ~~~~
